@@ -23,6 +23,18 @@ public class ProductSpecification {
                 : cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%");
     }
 
+    public static Specification<ProductEntity> hasColor(Long colorId) {
+        return (root, query, cb) -> {
+            if (colorId == null) {
+                return cb.conjunction();
+            }
+            // JOIN com SKUs
+            var skusJoin = root.join("skus");
+            return cb.equal(skusJoin.get("color").get("id"), colorId);
+        };
+    }
+
+
     // 🔹 Exemplo extra (você pode expandir depois)
     public static Specification<ProductEntity> priceGreaterThan(Double minPrice) {
         return (root, query, cb) -> minPrice == null

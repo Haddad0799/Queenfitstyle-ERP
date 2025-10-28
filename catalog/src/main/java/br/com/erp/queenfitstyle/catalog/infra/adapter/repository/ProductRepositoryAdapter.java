@@ -50,11 +50,12 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
     }
 
     @Override
-    public Page<Product> findAllFiltered(Long categoryId, Boolean active, String name, Pageable pageable) {
+    public Page<Product> findAllFiltered(Long categoryId, Boolean active, String name, Long colorId, Pageable pageable) {
 
         Specification<ProductEntity> spec = ProductSpecification.hasCategory(categoryId)
                 .and(ProductSpecification.isActive(active))
-                .and(ProductSpecification.nameContains(name));
+                .and(ProductSpecification.nameContains(name))
+                .and(ProductSpecification.hasColor(colorId));
 
 
         Page<ProductEntity> entities = productJpaRepository.findAll(spec, pageable);
