@@ -1,6 +1,7 @@
 package br.com.erp.queenfitstyle.catalog.infra.entity;
 
 import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 
 @Entity
@@ -14,8 +15,9 @@ public class SkuEntity {
     @Column(name = "sku_code", nullable = false, unique = true, length = 50)
     private String skuCode;
 
-    @Column(nullable = false)
-    private String color;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "color_id", nullable = false)
+    private ColorEntity color;
 
     @Column(nullable = false)
     private String size;
@@ -35,7 +37,7 @@ public class SkuEntity {
 
     public SkuEntity() {}
 
-    public SkuEntity(String skuCode, String color, String size, BigDecimal price, Integer inventory) {
+    public SkuEntity(String skuCode, ColorEntity color, String size, BigDecimal price, Integer inventory) {
         this.skuCode = skuCode;
         this.color = color;
         this.size = size;
@@ -44,7 +46,7 @@ public class SkuEntity {
         this.active = true;
     }
 
-    public SkuEntity(Long id ,String skuCode, String color, String size, BigDecimal price, Integer inventory, Boolean active) {
+    public SkuEntity(Long id ,String skuCode, ColorEntity color, String size, BigDecimal price, Integer inventory, Boolean active) {
         this.id = id;
         this.skuCode = skuCode;
         this.color = color;
@@ -60,10 +62,18 @@ public class SkuEntity {
     public String getSkuCode() { return skuCode; }
     public void setSkuCode(String skuCode) { this.skuCode = skuCode; }
 
-    public String getColor() { return color; }
-    public void setColor(String color) { this.color = color; }
+    public String getSize() {
+        return size;
+    }
 
-    public String getSize() { return size; }
+    public ColorEntity getColor() {
+        return color;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
     public void setSize(String size) { this.size = size; }
 
     public BigDecimal getPrice() { return price; }

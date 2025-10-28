@@ -1,6 +1,9 @@
 package br.com.erp.queenfitstyle.catalog.domain.entity;
 
-import br.com.erp.queenfitstyle.catalog.domain.valueobject.*;
+import br.com.erp.queenfitstyle.catalog.domain.valueobject.Inventory;
+import br.com.erp.queenfitstyle.catalog.domain.valueobject.Price;
+import br.com.erp.queenfitstyle.catalog.domain.valueobject.Size;
+import br.com.erp.queenfitstyle.catalog.domain.valueobject.SkuCode;
 
 import java.math.BigDecimal;
 
@@ -34,10 +37,6 @@ public class Sku {
         this.inventory = inventory;
     }
 
-    public boolean matchesFilters(String color, String size) {
-        return (color == null || this.color.value().equalsIgnoreCase(color))
-                && (size == null || this.size.value().equalsIgnoreCase(size));
-    }
 
     public Long getId() {
         return id;
@@ -47,8 +46,8 @@ public class Sku {
         return code.value();
     }
 
-    public String getColor() {
-        return color.value();
+    public Color getColor() {
+        return color;
     }
 
     public String getSize() {
@@ -65,6 +64,10 @@ public class Sku {
 
     public int getInventory() {
         return inventory.value();
+    }
+
+    public String getColorName() {
+        return color.getName();
     }
 
     public void changeInventory(Inventory newInventory) {

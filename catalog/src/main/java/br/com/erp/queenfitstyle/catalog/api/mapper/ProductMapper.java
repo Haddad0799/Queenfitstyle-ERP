@@ -11,7 +11,6 @@ import br.com.erp.queenfitstyle.catalog.domain.entity.Sku;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ProductMapper {
 
@@ -46,7 +45,7 @@ public class ProductMapper {
                 .map(sku -> new SkuDetailsDTO(
                         sku.getId(),
                         sku.getCode(),
-                        sku.getColor(),
+                        sku.getColorName(),
                         sku.getSize(),
                         sku.getPrice(),
                         sku.getInventory(),
@@ -62,7 +61,7 @@ public class ProductMapper {
         return new SkuDetailsDTO(
                 sku.getId(),
                 sku.getCode(),
-                sku.getColor(),
+                sku.getColorName(),
                 sku.getSize(),
                 sku.getPrice(),
                 sku.getInventory(),
