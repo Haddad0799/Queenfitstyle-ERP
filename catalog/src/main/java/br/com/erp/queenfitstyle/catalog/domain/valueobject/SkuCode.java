@@ -1,5 +1,7 @@
 package br.com.erp.queenfitstyle.catalog.domain.valueobject;
 
+import br.com.erp.queenfitstyle.catalog.domain.entity.Color;
+
 import java.util.Objects;
 
 public record SkuCode(String value) {
@@ -19,7 +21,7 @@ public record SkuCode(String value) {
         if (color == null) throw new IllegalArgumentException("Color não pode ser nula");
         if (size == null) throw new IllegalArgumentException("Size não pode ser nulo");
 
-        String normalizedColor = normalize(color.value());
+        String normalizedColor = normalize(color.getName());
         String normalizedSize = normalize(size.value());
 
         return productCode.value() + "-" + normalizedColor + "-" + normalizedSize;

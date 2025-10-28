@@ -1,16 +1,19 @@
 package br.com.erp.queenfitstyle.catalog.application.usecase.product.implementation;
 
 import br.com.erp.queenfitstyle.catalog.application.event.SkuErrorEventPublisher;
+import br.com.erp.queenfitstyle.catalog.application.exception.ColorNotFoundException;
 import br.com.erp.queenfitstyle.catalog.application.exception.category.CategoryNotFoundException;
 import br.com.erp.queenfitstyle.catalog.application.exception.product.ProductDuplicateException;
 import br.com.erp.queenfitstyle.catalog.application.service.ProductCodeGenerator;
 import br.com.erp.queenfitstyle.catalog.application.usecase.product.command.CreateProductCommand;
 import br.com.erp.queenfitstyle.catalog.application.usecase.product.command.CreateSkuCommand;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Category;
+import br.com.erp.queenfitstyle.catalog.domain.entity.Color;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Product;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Sku;
 import br.com.erp.queenfitstyle.catalog.domain.port.in.CreateProductUseCase;
 import br.com.erp.queenfitstyle.catalog.domain.port.out.CategoryRepositoryPort;
+import br.com.erp.queenfitstyle.catalog.domain.port.out.ColorRepositoryPort;
 import br.com.erp.queenfitstyle.catalog.domain.port.out.ProductRepositoryPort;
 import br.com.erp.queenfitstyle.catalog.domain.valueobject.*;
 import jakarta.transaction.Transactional;
@@ -26,12 +29,14 @@ public class CreateProductUseCaseImpl implements CreateProductUseCase {
 
    private final ProductRepositoryPort productRepository;
    private final CategoryRepositoryPort categoryRepository;
+   private final ColorRepositoryPort colorRepository;
    private final ProductCodeGenerator productCodeGenerator;
     private final SkuErrorEventPublisher skuErrorEventPublisher;
 
-    public CreateProductUseCaseImpl(ProductRepositoryPort productRepository, CategoryRepositoryPort categoryRepository, ProductCodeGenerator productCodeGenerator, SkuErrorEventPublisher skuErrorEventPublisher) {
+    public CreateProductUseCaseImpl(ProductRepositoryPort productRepository, CategoryRepositoryPort categoryRepository, ColorRepositoryPort colorRepository, ProductCodeGenerator productCodeGenerator, SkuErrorEventPublisher skuErrorEventPublisher) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.colorRepository = colorRepository;
         this.productCodeGenerator = productCodeGenerator;
         this.skuErrorEventPublisher = skuErrorEventPublisher;
     }
@@ -79,21 +84,27 @@ public class CreateProductUseCaseImpl implements CreateProductUseCase {
 
         for (CreateSkuCommand skuCommand : commands) {
             try {
-                Color color = new Color(skuCommand.color());
+                Color color = validateExistingColor(skuCommand.colorId());
                 Size size = new Size(skuCommand.size());
                 Price price = new Price(skuCommand.price());
-                Inventory inventory = new Inventory(skuCommand.stock());
+                Inventory inventory = new Inventory(skuCommand.inventory());
                 SkuCode skuCode = new SkuCode(productCode, color, size);
                 skus.add(new Sku(skuCode, color, size, price, inventory));
             } catch (Exception e) {
-                errors.add("Falha ao criar SKU [Cor: %s, Tamanho: %s]: %s"
-                        .formatted(skuCommand.color(), skuCommand.size(), e.getMessage()));
+                errors.add("Falha ao criar SKU [Cor: %d, Tamanho: %s]: %s"
+                        .formatted(skuCommand.colorId(), skuCommand.size(), e.getMessage()));
             }
         }
-
-        // Publica os erros de forma desacoplada sem bloquear SKUS que não possuem falhas.
+        // Publica os erros de forma desacoplada sem bloquear persistência de SKUS que não possuem falhas.
         skuErrorEventPublisher.publish(errors);
 
         return skus;
+    }
+
+    private Color validateExistingColor(Long colorId) {
+        return colorRepository
+                .findByid(colorId)
+                .orElseThrow(()-> new ColorNotFoundException(
+                        "Nenhuma cor encontrada para o ID fornecido: " + colorId));
     }
 }

@@ -18,7 +18,7 @@ public class ProductCommandFactory {
         List<CreateSkuCommand> skuCommands = dto.skus() == null ? List.of() :
                 dto.skus().stream()
                         .map(skuDto -> new CreateSkuCommand(
-                                skuDto.color(),
+                                skuDto.colorId(),
                                 skuDto.size(),
                                 skuDto.price(),
                                 skuDto.inventory()
