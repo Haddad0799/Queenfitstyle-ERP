@@ -50,12 +50,12 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
     }
 
     @Override
-    public Page<Product> findAllFiltered(Long categoryId, Boolean active, String name, Pageable pageable) {
+    public Page<Product> findAllFiltered(Long categoryId, Boolean active, String name, Long colorId, String sizeFilter, Pageable pageable) {
 
         Specification<ProductEntity> spec = ProductSpecification.hasCategory(categoryId)
                 .and(ProductSpecification.isActive(active))
-                .and(ProductSpecification.nameContains(name));
-
+                .and(ProductSpecification.nameContains(name))
+                .and(ProductSpecification.hasColorAndSize(colorId, sizeFilter));
 
         Page<ProductEntity> entities = productJpaRepository.findAll(spec, pageable);
 
@@ -66,6 +66,14 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
     public Optional<Product> findBySkuCode(String skuCode) {
         return productJpaRepository
                 .findBySkuCode(skuCode)
+                .map(ProductEntityMapper::toDomain);
+    }
+
+    @Override
+    public Optional<Product> findProductWithSku(Long productId, String skuCode) {
+
+        return productJpaRepository
+                .findProductWithSku(productId,skuCode)
                 .map(ProductEntityMapper::toDomain);
     }
 

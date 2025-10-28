@@ -29,5 +29,10 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, Long>
 """)
     Optional<ProductEntity> findBySkuCode(@Param("skuCode") String skuCode);
 
+    @Query("SELECT p FROM ProductEntity p JOIN FETCH p.skus s WHERE p.id = :productId AND s.skuCode = :skuCode")
+    Optional<ProductEntity> findProductWithSku(@Param("productId") Long productId, @Param("skuCode") String skuCode);
+
+
+
 
 }

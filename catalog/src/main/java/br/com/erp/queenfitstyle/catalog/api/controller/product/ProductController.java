@@ -94,19 +94,23 @@ public class ProductController {
             @RequestParam(defaultValue = "asc") String direction,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) Boolean active,
-            @RequestParam(required = false) String name
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Long colorId,
+            @RequestParam(required = false) String sizeFilter  // <--- novo
     ) {
         Pageable pageable = PageRequest.of(page, size,
                 direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending());
 
         Page<Product> products = findAllProductsFilteredUseCase
-                .execute(categoryId, active, name, pageable);
+                .execute(categoryId, active, name, colorId, sizeFilter, pageable);
 
         Page<ProductDetailsDTO> response = products
                 .map(ProductMapper::toDetailsDTO);
 
         return ResponseEntity.ok(response);
     }
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductDetailsDTO> updateProduct(@PathVariable Long id, @RequestBody UpdateProductDTO dto) {
@@ -143,8 +147,6 @@ public class ProductController {
 
         SkuCode code = new SkuCode(skuCode);
 
-        System.out.println(updated.getSkus());
-
         Sku sku = updated.findSkuByCode(code)
                 .orElseThrow(() -> new SkuNotFoundException(
                         "SKU " + skuCode + " não encontrado para o produto " + updated.getCode()
@@ -153,7 +155,6 @@ public class ProductController {
         SkuDetailsDTO response = ProductMapper.toSkuDetailsDTO(sku);
 
         return ResponseEntity.ok(response);
-
     }
 
 }

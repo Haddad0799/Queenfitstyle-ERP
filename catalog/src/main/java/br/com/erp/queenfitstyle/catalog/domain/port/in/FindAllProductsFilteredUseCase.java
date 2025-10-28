@@ -6,6 +6,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface FindAllProductsFilteredUseCase {
 
-    Page<Product> execute(Long categoryId, Boolean active, String name, Pageable pageable);
+    Page<Product> execute(Long categoryId, Boolean active, String name, Long colorId, String sizeFilter, Pageable pageable);
 
 }
