@@ -19,7 +19,7 @@ public class FindAllProductsFilteredUseCaseImpl implements FindAllProductsFilter
 
     @Override
     @Transactional
-    public Page<Product> execute(Long categoryId, Boolean active, String name, Long colorId, Pageable pageable) {
-        return productRepository.findAllFiltered(categoryId,active,name,colorId, pageable);
+    public Page<Product> execute(Long categoryId, Boolean active, String name, Long colorId, String sizeFilter, Pageable pageable) {
+        return productRepository.findAllFiltered(categoryId,active,name,colorId, sizeFilter, pageable);
     }
 }

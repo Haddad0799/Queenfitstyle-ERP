@@ -95,19 +95,21 @@ public class ProductController {
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) Boolean active,
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) Long colorId
+            @RequestParam(required = false) Long colorId,
+            @RequestParam(required = false) String sizeFilter  // <--- novo
     ) {
         Pageable pageable = PageRequest.of(page, size,
                 direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending());
 
         Page<Product> products = findAllProductsFilteredUseCase
-                .execute(categoryId, active, name, colorId, pageable);
+                .execute(categoryId, active, name, colorId, sizeFilter, pageable);
 
         Page<ProductDetailsDTO> response = products
                 .map(ProductMapper::toDetailsDTO);
 
         return ResponseEntity.ok(response);
     }
+
 
 
     @PutMapping("/{id}")
@@ -153,7 +155,6 @@ public class ProductController {
         SkuDetailsDTO response = ProductMapper.toSkuDetailsDTO(sku);
 
         return ResponseEntity.ok(response);
-
     }
 
 }

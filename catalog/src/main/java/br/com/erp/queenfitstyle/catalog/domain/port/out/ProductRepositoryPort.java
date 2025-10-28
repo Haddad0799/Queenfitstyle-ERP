@@ -12,9 +12,11 @@ public interface ProductRepositoryPort {
 
     Optional<Product> findById(Long id);
 
-    Page<Product> findAllFiltered(Long categoryId, Boolean active, String name, Long colorId, Pageable pageable);
+    Page<Product> findAllFiltered(Long categoryId, Boolean active, String name, Long colorId, String sizeFilter, Pageable pageable);
 
     Optional<Product> findBySkuCode(String skuCode);
+
+    Optional<Product> findProductWithSku(Long productId, String skuCode);
 
 
 }

@@ -23,26 +23,19 @@ public class UpdateProductSkuUseCaseImpl implements UpdateProductSkuUseCase {
     @Override
     @Transactional
     public Product execute(UpdateSkuCommand command) {
-        // 1️⃣ Busca o produto pelo SKU (aggregate root)
-        Product product = productRepository
-                .findBySkuCode(command.skuCode())
+
+        Product product = productRepository.findProductWithSku(command.productId(), command.skuCode())
                 .orElseThrow(() -> new ProductNotFoundException(
-                        "Não existe essa variação de produto " + command.skuCode()));
+                        "Produto com ID " + command.productId() + " e SKU " + command.skuCode() + " não encontrado"
+                ));
 
-        // 2️⃣ Busca o SKU específico dentro do produto
-        Sku sku = product.getSkus().stream()
-                .filter(s -> s.getCode().equals(command.skuCode()))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "SKU não encontrado para o produto " + product.getCode()));
+        Sku sku = product.getSkus().iterator().next();
 
-        // 3️⃣ Atualiza os valores da SKU
         if(command.price() != null)  sku.changePrice(new Price(command.price()));
-
         if(command.inventory() != 0) sku.changeInventory(new Inventory(command.inventory()));
 
-        // 4️⃣ Salva o produto (aggregate root)
         return productRepository.save(product);
     }
+
 
 }

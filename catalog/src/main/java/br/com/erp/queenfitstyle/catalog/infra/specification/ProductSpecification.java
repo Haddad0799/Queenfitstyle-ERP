@@ -1,6 +1,9 @@
 package br.com.erp.queenfitstyle.catalog.infra.specification;
 
 import br.com.erp.queenfitstyle.catalog.infra.entity.ProductEntity;
+import br.com.erp.queenfitstyle.catalog.infra.entity.SkuEntity;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ProductSpecification {
@@ -23,22 +26,31 @@ public class ProductSpecification {
                 : cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%");
     }
 
-    public static Specification<ProductEntity> hasColor(Long colorId) {
+    public static Specification<ProductEntity> hasColorAndSize(Long colorId, String size) {
         return (root, query, cb) -> {
-            if (colorId == null) {
+            if (colorId == null && (size == null || size.isBlank())) {
                 return cb.conjunction();
             }
-            // JOIN com SKUs
-            var skusJoin = root.join("skus");
-            return cb.equal(skusJoin.get("color").get("id"), colorId);
+
+            Join<ProductEntity, SkuEntity> skus = root.join("skus", JoinType.INNER);
+
+            var predicate = cb.conjunction();
+
+            if (colorId != null) {
+                predicate = cb.and(predicate, cb.equal(skus.get("color").get("id"), colorId));
+            }
+
+            if (size != null && !size.isBlank()) {
+                predicate = cb.and(predicate, cb.equal(skus.get("size"), size.toUpperCase())); // uppercase
+            }
+
+            assert query != null;
+            query.distinct(true);
+
+            return predicate;
         };
     }
 
 
-    // 🔹 Exemplo extra (você pode expandir depois)
-    public static Specification<ProductEntity> priceGreaterThan(Double minPrice) {
-        return (root, query, cb) -> minPrice == null
-                ? cb.conjunction()
-                : cb.greaterThanOrEqualTo(root.get("price"), minPrice);
-    }
+
 }
