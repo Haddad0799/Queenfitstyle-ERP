@@ -4,7 +4,6 @@ import br.com.erp.queenfitstyle.catalog.api.dto.error.Error;
 import br.com.erp.queenfitstyle.catalog.api.dto.error.ProductImportError;
 import br.com.erp.queenfitstyle.catalog.api.dto.product.response.*;
 import br.com.erp.queenfitstyle.catalog.api.dto.sku.response.SkuDetailsDTO;
-import br.com.erp.queenfitstyle.catalog.application.command.CreateProductCommand;
 import br.com.erp.queenfitstyle.catalog.application.command.ImportProductCommand;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Category;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Product;

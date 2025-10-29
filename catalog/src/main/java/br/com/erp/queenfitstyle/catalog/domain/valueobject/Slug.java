@@ -11,7 +11,7 @@ public record Slug(String value) {
         }
 
         String normalized = Normalizer.normalize(productName, Normalizer.Form.NFD)
-                .replaceAll("[\\p{InCombiningDiacriticalMarks}]+", "") // remove acentos
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "") // remove acentos
                 .toLowerCase()
                 .replaceAll("[^a-z0-9\\s-]", "") // remove caracteres especiais
                 .trim()

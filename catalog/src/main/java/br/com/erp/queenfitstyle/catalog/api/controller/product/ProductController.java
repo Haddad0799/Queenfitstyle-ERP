@@ -176,6 +176,8 @@ public class ProductController {
 
         List<ProductImportError> errors = importErrorListener.getErrors();
 
+        importErrorListener.clear();
+
         ImportResumeDTO resume = ProductMapper.toImportResume(commands, savedProducts, errors);
 
         return ResponseEntity.ok(resume);

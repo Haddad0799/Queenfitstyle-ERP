@@ -1,10 +1,14 @@
 package br.com.erp.queenfitstyle.catalog.domain.port.out;
 
 import br.com.erp.queenfitstyle.catalog.domain.entity.Product;
+import br.com.erp.queenfitstyle.catalog.domain.valueobject.Slug;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface ProductRepositoryPort {
     Product save(Product product);
@@ -19,4 +23,5 @@ public interface ProductRepositoryPort {
     Optional<Product> findProductWithSku(Long productId, String skuCode);
 
 
+    List<Product> findBySlugInAndActiveTrue(Set<String> slugs);
 }

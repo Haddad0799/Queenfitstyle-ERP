@@ -4,7 +4,10 @@ import br.com.erp.queenfitstyle.catalog.domain.entity.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 // Porta de saída (domain/port/out)
 public interface CategoryRepositoryPort {
@@ -20,4 +23,6 @@ public interface CategoryRepositoryPort {
     Optional<Category> findByIdAndActiveTrue(Long id);
 
     Optional<Category> findByNormalizedNameAndActiveTrue(String name);
+
+    List<Category> findByNormalizedNameInAndActiveTrue(Set<String> normalizedNames);
 }

@@ -9,7 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public class CategoryRepositoryAdapter implements CategoryRepositoryPort {
@@ -81,6 +83,15 @@ public class CategoryRepositoryAdapter implements CategoryRepositoryPort {
         return categoryJpaRepository
                 .findByNormalizedNameAndActiveTrue(name)
                 .map(CategoryEntityMapper::toDomain);
+    }
+
+    @Override
+    public List<Category> findByNormalizedNameInAndActiveTrue(Set<String> normalizedNames) {
+        return categoryJpaRepository
+                .findByNormalizedNameInAndActiveTrue(normalizedNames)
+                .stream()
+                .map(CategoryEntityMapper::toDomain)
+                .toList();
     }
 
 
