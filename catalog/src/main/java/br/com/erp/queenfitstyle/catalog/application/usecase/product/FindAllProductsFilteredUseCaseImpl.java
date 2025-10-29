@@ -1,4 +1,4 @@
-package br.com.erp.queenfitstyle.catalog.application.usecase.product.implementation;
+package br.com.erp.queenfitstyle.catalog.application.usecase.product;
 
 import br.com.erp.queenfitstyle.catalog.domain.entity.Product;
 import br.com.erp.queenfitstyle.catalog.domain.port.in.FindAllProductsFilteredUseCase;

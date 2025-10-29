@@ -1,4 +1,4 @@
-package br.com.erp.queenfitstyle.catalog.application.usecase.product.command;
+package br.com.erp.queenfitstyle.catalog.application.command;
 
 import java.math.BigDecimal;
 

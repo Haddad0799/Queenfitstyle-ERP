@@ -1,5 +1,6 @@
 package br.com.erp.queenfitstyle.catalog.infra.repository;
 
+import br.com.erp.queenfitstyle.catalog.domain.entity.Category;
 import br.com.erp.queenfitstyle.catalog.infra.entity.CategoryEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,7 +9,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface CategoryJpaRepository extends JpaRepository<CategoryEntity, Long> {
 
@@ -33,4 +36,7 @@ public interface CategoryJpaRepository extends JpaRepository<CategoryEntity, Lon
 
     Optional<CategoryEntity> findByIdAndActiveTrue(@Param("id") Long id);
 
+    Optional<CategoryEntity> findByNormalizedNameAndActiveTrue(String name);
+
+    List<CategoryEntity> findByNormalizedNameInAndActiveTrue(Set<String> normalizedNames);
 }

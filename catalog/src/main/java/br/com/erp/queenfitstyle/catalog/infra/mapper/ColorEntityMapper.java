@@ -1,6 +1,8 @@
 package br.com.erp.queenfitstyle.catalog.infra.mapper;
 
 import br.com.erp.queenfitstyle.catalog.domain.entity.Color;
+import br.com.erp.queenfitstyle.catalog.domain.valueobject.ColorName;
+import br.com.erp.queenfitstyle.catalog.domain.valueobject.Hexadecimal;
 import br.com.erp.queenfitstyle.catalog.infra.entity.ColorEntity;
 
 public class ColorEntityMapper {
@@ -8,7 +10,7 @@ public class ColorEntityMapper {
 
     public static ColorEntity toNewEntity(Color color) {
         if (color == null) return null;
-        return new ColorEntity(color.getName(),
+        return new ColorEntity(color.getDisplayName(),
                 color.getNormalizedName(),
                 color.getHexCode(),
                 color.isActive()
@@ -19,7 +21,7 @@ public class ColorEntityMapper {
     public static ColorEntity toExistingEntity(Color color) {
         if (color == null) return null;
         return new ColorEntity(color.getId(),
-                color.getName(),
+                color.getDisplayName(),
                 color.getNormalizedName(),
                 color.getHexCode(),
                 color.isActive());
@@ -27,9 +29,11 @@ public class ColorEntityMapper {
 
     public static Color toDomain(ColorEntity entity) {
         if (entity == null) return null;
-        return new Color(entity.getId(), entity.getName(),
-                entity.getNormalizedName(),
-                entity.getHexaCode(),
+
+
+        return new Color(entity.getId(),
+                new ColorName(entity.getName(), entity.getNormalizedName()),
+                new Hexadecimal(entity.getHexaCode()),
                 entity.isActive());
     }
 }

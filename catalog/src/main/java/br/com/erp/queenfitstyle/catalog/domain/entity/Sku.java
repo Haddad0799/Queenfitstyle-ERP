@@ -67,7 +67,7 @@ public class Sku {
     }
 
     public String getColorName() {
-        return color.getName();
+        return color.getDisplayName();
     }
 
     public void changeInventory(Inventory newInventory) {

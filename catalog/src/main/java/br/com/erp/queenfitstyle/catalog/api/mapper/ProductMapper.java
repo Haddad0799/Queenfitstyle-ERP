@@ -1,10 +1,10 @@
 package br.com.erp.queenfitstyle.catalog.api.mapper;
 
 import br.com.erp.queenfitstyle.catalog.api.dto.error.Error;
-import br.com.erp.queenfitstyle.catalog.api.dto.product.response.CreateProductResumeDTO;
-import br.com.erp.queenfitstyle.catalog.api.dto.product.response.ProductCategoryDTO;
-import br.com.erp.queenfitstyle.catalog.api.dto.product.response.ProductDetailsDTO;
+import br.com.erp.queenfitstyle.catalog.api.dto.error.ProductImportError;
+import br.com.erp.queenfitstyle.catalog.api.dto.product.response.*;
 import br.com.erp.queenfitstyle.catalog.api.dto.sku.response.SkuDetailsDTO;
+import br.com.erp.queenfitstyle.catalog.application.command.ImportProductCommand;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Category;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Product;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Sku;
@@ -68,5 +68,29 @@ public class ProductMapper {
                 sku.isActive()
         );
     }
+
+    public static ImportResumeDTO toImportResume(
+            List<ImportProductCommand> commands,
+            List<Product> savedProducts,
+            List<ProductImportError> importErrors
+    ) {
+        int totalProducts = commands.size();
+        int successfulProducts = savedProducts.size();
+        int failedProducts = totalProducts - successfulProducts;
+
+        int totalSkus = commands.stream().mapToInt(c -> c.skus().size()).sum();
+        int successfulSkus = savedProducts.stream().mapToInt(p -> p.getSkus().size()).sum();
+        int failedSkus = totalSkus - successfulSkus;
+
+        Summary summary = new Summary(
+                totalProducts, successfulProducts, failedProducts,
+                totalSkus, successfulSkus, failedSkus
+        );
+
+        return new ImportResumeDTO(summary, importErrors);
+    }
+
+
+
 
 }

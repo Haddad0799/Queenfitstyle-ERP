@@ -11,7 +11,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public class ProductRepositoryAdapter implements ProductRepositoryPort {
@@ -75,6 +77,15 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
         return productJpaRepository
                 .findProductWithSku(productId,skuCode)
                 .map(ProductEntityMapper::toDomain);
+    }
+
+    @Override
+    public List<Product> findBySlugInAndActiveTrue(Set<String> slugs) {
+        return productJpaRepository
+                .findBySlugInAndActiveTrue(slugs)
+                .stream()
+                .map(ProductEntityMapper::toDomain)
+                .toList();
     }
 
 }

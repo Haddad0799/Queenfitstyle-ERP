@@ -1,19 +1,24 @@
 package br.com.erp.queenfitstyle.catalog.api.controller.product;
 
+import br.com.erp.queenfitstyle.catalog.api.dto.error.ProductImportError;
 import br.com.erp.queenfitstyle.catalog.api.dto.product.request.CreateProductDTO;
+import br.com.erp.queenfitstyle.catalog.api.dto.product.request.ImportProductsDTO;
 import br.com.erp.queenfitstyle.catalog.api.dto.product.request.UpdateProductDTO;
 import br.com.erp.queenfitstyle.catalog.api.dto.product.response.CreateProductResumeDTO;
+import br.com.erp.queenfitstyle.catalog.api.dto.product.response.ImportResumeDTO;
 import br.com.erp.queenfitstyle.catalog.api.dto.product.response.ProductDetailsDTO;
 import br.com.erp.queenfitstyle.catalog.api.dto.product.response.ProductSkusDTO;
 import br.com.erp.queenfitstyle.catalog.api.dto.sku.request.UpdateSkuDto;
 import br.com.erp.queenfitstyle.catalog.api.dto.sku.response.SkuDetailsDTO;
 import br.com.erp.queenfitstyle.catalog.api.exception.SkuNotFoundException;
 import br.com.erp.queenfitstyle.catalog.api.factory.ProductCommandFactory;
+import br.com.erp.queenfitstyle.catalog.api.listener.ImportErrorListener;
 import br.com.erp.queenfitstyle.catalog.api.listener.SkuErrorListener;
 import br.com.erp.queenfitstyle.catalog.api.mapper.ProductMapper;
-import br.com.erp.queenfitstyle.catalog.application.usecase.product.command.CreateProductCommand;
-import br.com.erp.queenfitstyle.catalog.application.usecase.product.command.UpdateProductCommand;
-import br.com.erp.queenfitstyle.catalog.application.usecase.product.command.UpdateSkuCommand;
+import br.com.erp.queenfitstyle.catalog.application.command.CreateProductCommand;
+import br.com.erp.queenfitstyle.catalog.application.command.ImportProductCommand;
+import br.com.erp.queenfitstyle.catalog.application.command.UpdateProductCommand;
+import br.com.erp.queenfitstyle.catalog.application.command.UpdateSkuCommand;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Product;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Sku;
 import br.com.erp.queenfitstyle.catalog.domain.port.in.*;
@@ -33,17 +38,22 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
 
+    //UseCases
     private final CreateProductUseCase createProductUseCase;
     private final GetProductByIdUseCase getProductByIdUseCase;
     private final FindAllProductsFilteredUseCase findAllProductsFilteredUseCase;
     private final UpdateProductUseCase updateProductUseCase;
-    private final SkuErrorListener errorListener;
     private final FindAllSkusByProductUseCase findAllSkusByProductUseCase;
     private final UpdateProductSkuUseCase updateProductSkuUseCase;
+    private final ImportProductsUseCase importProductsUseCase;
+
+    //EventListenners
+    private final ImportErrorListener importErrorListener;
+    private final SkuErrorListener errorListener;
 
 
 
-    public ProductController(CreateProductUseCase createProductUseCase, GetProductByIdUseCase getProductByIdUseCase, FindAllProductsFilteredUseCase findAllProductsFilteredUseCase, UpdateProductUseCase updateProductUseCase, SkuErrorListener errorListener, FindAllSkusByProductUseCase findAllSkusByProductUseCase, UpdateProductSkuUseCase updateProductSkuUseCase) {
+    public ProductController(CreateProductUseCase createProductUseCase, GetProductByIdUseCase getProductByIdUseCase, FindAllProductsFilteredUseCase findAllProductsFilteredUseCase, UpdateProductUseCase updateProductUseCase, SkuErrorListener errorListener, FindAllSkusByProductUseCase findAllSkusByProductUseCase, UpdateProductSkuUseCase updateProductSkuUseCase, ImportProductsUseCase importProductsUseCase, ImportErrorListener importErrorListener) {
         this.createProductUseCase = createProductUseCase;
         this.getProductByIdUseCase = getProductByIdUseCase;
         this.findAllProductsFilteredUseCase = findAllProductsFilteredUseCase;
@@ -51,6 +61,8 @@ public class ProductController {
         this.errorListener = errorListener;
         this.findAllSkusByProductUseCase = findAllSkusByProductUseCase;
         this.updateProductSkuUseCase = updateProductSkuUseCase;
+        this.importProductsUseCase = importProductsUseCase;
+        this.importErrorListener = importErrorListener;
     }
 
 
@@ -96,7 +108,7 @@ public class ProductController {
             @RequestParam(required = false) Boolean active,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Long colorId,
-            @RequestParam(required = false) String sizeFilter  // <--- novo
+            @RequestParam(required = false) String sizeFilter
     ) {
         Pageable pageable = PageRequest.of(page, size,
                 direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending());
@@ -111,7 +123,6 @@ public class ProductController {
     }
 
 
-
     @PutMapping("/{id}")
     public ResponseEntity<ProductDetailsDTO> updateProduct(@PathVariable Long id, @RequestBody UpdateProductDTO dto) {
 
@@ -120,7 +131,6 @@ public class ProductController {
         Product updated = updateProductUseCase.execute(command);
 
         ProductDetailsDTO response = ProductMapper.toDetailsDTO(updated);
-        System.out.println(updated.getSkus());
 
         return ResponseEntity.ok(response);
 
@@ -155,6 +165,22 @@ public class ProductController {
         SkuDetailsDTO response = ProductMapper.toSkuDetailsDTO(sku);
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/import")
+    public ResponseEntity<ImportResumeDTO> importProducts(@RequestBody ImportProductsDTO dto) {
+
+        List<ImportProductCommand> commands = ProductCommandFactory.fromImportDTO(dto);
+
+        List<Product> savedProducts = importProductsUseCase.execute(commands);
+
+        List<ProductImportError> errors = importErrorListener.getErrors();
+
+        importErrorListener.clear();
+
+        ImportResumeDTO resume = ProductMapper.toImportResume(commands, savedProducts, errors);
+
+        return ResponseEntity.ok(resume);
     }
 
 }
