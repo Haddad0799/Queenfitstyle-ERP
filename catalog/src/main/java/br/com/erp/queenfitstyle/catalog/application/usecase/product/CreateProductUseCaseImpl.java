@@ -1,12 +1,12 @@
-package br.com.erp.queenfitstyle.catalog.application.usecase.product.implementation;
+package br.com.erp.queenfitstyle.catalog.application.usecase.product;
 
+import br.com.erp.queenfitstyle.catalog.application.command.CreateProductCommand;
+import br.com.erp.queenfitstyle.catalog.application.command.CreateSkuCommand;
 import br.com.erp.queenfitstyle.catalog.application.event.SkuErrorEventPublisher;
 import br.com.erp.queenfitstyle.catalog.application.exception.ColorNotFoundException;
 import br.com.erp.queenfitstyle.catalog.application.exception.category.CategoryNotFoundException;
 import br.com.erp.queenfitstyle.catalog.application.exception.product.ProductDuplicateException;
 import br.com.erp.queenfitstyle.catalog.application.service.ProductCodeGenerator;
-import br.com.erp.queenfitstyle.catalog.application.usecase.product.command.CreateProductCommand;
-import br.com.erp.queenfitstyle.catalog.application.usecase.product.command.CreateSkuCommand;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Category;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Color;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Product;
@@ -31,7 +31,7 @@ public class CreateProductUseCaseImpl implements CreateProductUseCase {
    private final CategoryRepositoryPort categoryRepository;
    private final ColorRepositoryPort colorRepository;
    private final ProductCodeGenerator productCodeGenerator;
-    private final SkuErrorEventPublisher skuErrorEventPublisher;
+   private final SkuErrorEventPublisher skuErrorEventPublisher;
 
     public CreateProductUseCaseImpl(ProductRepositoryPort productRepository, CategoryRepositoryPort categoryRepository, ColorRepositoryPort colorRepository, ProductCodeGenerator productCodeGenerator, SkuErrorEventPublisher skuErrorEventPublisher) {
         this.productRepository = productRepository;
@@ -53,7 +53,7 @@ public class CreateProductUseCaseImpl implements CreateProductUseCase {
         ProductCode productCode = productCodeGenerator.nextCode();
         Product product = new Product(command.name(), productCode,command.description(),category,productBasePrice);
 
-        Set<Sku> skus = buildSkus(command.skus(), productCode);
+        Set<Sku> skus = buildSkus(command.skus(), product.getCode());
 
         product.addSkus(skus);
 
@@ -78,7 +78,7 @@ public class CreateProductUseCaseImpl implements CreateProductUseCase {
         }
     }
 
-    private Set<Sku> buildSkus(List<CreateSkuCommand> commands, ProductCode productCode) {
+    private Set<Sku> buildSkus(List<CreateSkuCommand> commands, String productCode) {
         Set<Sku> skus = new HashSet<>();
         List<String> errors = new ArrayList<>();
 

@@ -18,4 +18,6 @@ public interface CategoryRepositoryPort {
 
     boolean existsByNormalizedNameAndNotId(String normalizedName, Long id);
     Optional<Category> findByIdAndActiveTrue(Long id);
+
+    Optional<Category> findByNormalizedNameAndActiveTrue(String name);
 }

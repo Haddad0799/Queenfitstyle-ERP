@@ -1,4 +1,4 @@
-package br.com.erp.queenfitstyle.catalog.application.usecase.product.implementation;
+package br.com.erp.queenfitstyle.catalog.application.usecase.product;
 
 import br.com.erp.queenfitstyle.catalog.application.exception.product.ProductNotFoundException;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Product;

@@ -33,4 +33,5 @@ public interface CategoryJpaRepository extends JpaRepository<CategoryEntity, Lon
 
     Optional<CategoryEntity> findByIdAndActiveTrue(@Param("id") Long id);
 
+    Optional<CategoryEntity> findByNormalizedNameAndActiveTrue(String name);
 }

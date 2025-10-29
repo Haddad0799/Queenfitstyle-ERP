@@ -1,7 +1,7 @@
-package br.com.erp.queenfitstyle.catalog.application.usecase.product.implementation;
+package br.com.erp.queenfitstyle.catalog.application.usecase.product;
 
 import br.com.erp.queenfitstyle.catalog.application.exception.category.CategoryNotFoundException;
-import br.com.erp.queenfitstyle.catalog.application.usecase.product.command.UpdateProductCommand;
+import br.com.erp.queenfitstyle.catalog.application.command.UpdateProductCommand;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Category;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Product;
 import br.com.erp.queenfitstyle.catalog.domain.port.in.UpdateProductUseCase;

@@ -12,19 +12,17 @@ public record SkuCode(String value) {
         }
     }
 
-    public SkuCode(ProductCode productCode, Color color, Size size) {
+    public SkuCode(String productCode, Color color, Size size) {
         this(buildSkuValue(productCode, color, size));
     }
 
-    private static String buildSkuValue(ProductCode productCode, Color color, Size size) {
+    private static String buildSkuValue(String productCode, Color color, Size size) {
         if (productCode == null) throw new IllegalArgumentException("ProductCode não pode ser nulo");
         if (color == null) throw new IllegalArgumentException("Color não pode ser nula");
         if (size == null) throw new IllegalArgumentException("Size não pode ser nulo");
 
-        String normalizedColor = normalize(color.getName());
-        String normalizedSize = normalize(size.value());
 
-        return productCode.value() + "-" + normalizedColor + "-" + normalizedSize;
+        return productCode + "-" + color.getNormalizedName() + "-" + size;
     }
 
     private static String normalize(String value) {

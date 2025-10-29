@@ -1,12 +1,12 @@
 package br.com.erp.queenfitstyle.catalog.api.factory;
 
 import br.com.erp.queenfitstyle.catalog.api.dto.product.request.CreateProductDTO;
+import br.com.erp.queenfitstyle.catalog.api.dto.product.request.ImportProductDTO;
+import br.com.erp.queenfitstyle.catalog.api.dto.product.request.ImportProductsDTO;
 import br.com.erp.queenfitstyle.catalog.api.dto.product.request.UpdateProductDTO;
+import br.com.erp.queenfitstyle.catalog.api.dto.sku.request.ImportProductSkuDTO;
 import br.com.erp.queenfitstyle.catalog.api.dto.sku.request.UpdateSkuDto;
-import br.com.erp.queenfitstyle.catalog.application.usecase.product.command.CreateProductCommand;
-import br.com.erp.queenfitstyle.catalog.application.usecase.product.command.CreateSkuCommand;
-import br.com.erp.queenfitstyle.catalog.application.usecase.product.command.UpdateProductCommand;
-import br.com.erp.queenfitstyle.catalog.application.usecase.product.command.UpdateSkuCommand;
+import br.com.erp.queenfitstyle.catalog.application.command.*;
 
 import java.util.List;
 
@@ -50,5 +50,34 @@ public class ProductCommandFactory {
                 skuCode,
                 dto.price(),
                 dto.inventory());
+    }
+
+    public static List<ImportProductCommand> fromImportDTO(ImportProductsDTO dto) {
+        return dto.products().stream()
+                .map(ProductCommandFactory::toCommand)
+                .toList();
+    }
+
+    private static ImportProductCommand toCommand(ImportProductDTO productDTO) {
+        List<ImportSkuCommand> skuCommands = productDTO.skus().stream()
+                .map(ProductCommandFactory::toSkuCommand)
+                .toList();
+
+        return new ImportProductCommand(
+                productDTO.name(),
+                productDTO.description(),
+                productDTO.categoryName(),
+                productDTO.basePrice(),
+                skuCommands
+        );
+    }
+
+    private static ImportSkuCommand toSkuCommand(ImportProductSkuDTO skuDTO) {
+        return new ImportSkuCommand(
+                skuDTO.colorName(),
+                skuDTO.size(),
+                skuDTO.inventory(),
+                skuDTO.price()
+        );
     }
 }

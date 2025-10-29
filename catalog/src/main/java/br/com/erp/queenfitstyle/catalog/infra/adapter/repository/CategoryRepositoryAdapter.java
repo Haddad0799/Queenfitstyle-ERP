@@ -76,5 +76,12 @@ public class CategoryRepositoryAdapter implements CategoryRepositoryPort {
                 .map(CategoryEntityMapper::toDomain);
     }
 
+    @Override
+    public Optional<Category> findByNormalizedNameAndActiveTrue(String name) {
+        return categoryJpaRepository
+                .findByNormalizedNameAndActiveTrue(name)
+                .map(CategoryEntityMapper::toDomain);
+    }
+
 
 }

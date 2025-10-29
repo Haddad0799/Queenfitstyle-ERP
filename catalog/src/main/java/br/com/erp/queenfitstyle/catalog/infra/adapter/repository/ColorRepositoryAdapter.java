@@ -23,4 +23,11 @@ public class ColorRepositoryAdapter implements ColorRepositoryPort {
                 .findById(id)
                 .map(ColorEntityMapper::toDomain);
     }
+
+    @Override
+    public Optional<Color> findByNormalizedNameAndActiveTrue(String name) {
+        return colorJpaRepository
+                .findByNormalizedNameAndActiveTrue(name)
+                .map(ColorEntityMapper::toDomain);
+    }
 }

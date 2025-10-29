@@ -7,4 +7,6 @@ import java.util.Optional;
 public interface ColorRepositoryPort {
 
     Optional<Color> findByid(Long id);
+
+    Optional<Color> findByNormalizedNameAndActiveTrue(String name);
 }

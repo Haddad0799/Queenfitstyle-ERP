@@ -1,7 +1,7 @@
-package br.com.erp.queenfitstyle.catalog.application.usecase.product.implementation;
+package br.com.erp.queenfitstyle.catalog.application.usecase.product;
 
 import br.com.erp.queenfitstyle.catalog.application.exception.product.ProductNotFoundException;
-import br.com.erp.queenfitstyle.catalog.application.usecase.product.command.UpdateSkuCommand;
+import br.com.erp.queenfitstyle.catalog.application.command.UpdateSkuCommand;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Product;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Sku;
 import br.com.erp.queenfitstyle.catalog.domain.port.in.UpdateProductSkuUseCase;
