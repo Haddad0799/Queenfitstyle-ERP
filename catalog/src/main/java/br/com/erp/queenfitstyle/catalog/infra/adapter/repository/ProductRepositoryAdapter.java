@@ -84,8 +84,29 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
         return productJpaRepository
                 .findBySlugInAndActiveTrue(slugs)
                 .stream()
+                .map(p-> ProductEntityMapper.toDomain(p,false))
+                .toList();
+    }
+
+    @Override
+    public List<Product> saveAll(List<Product> productsfitToSave) {
+
+        List<ProductEntity> productEntities = productsfitToSave
+                .stream()
+                .map(p-> ProductEntityMapper.toNewEntity(p,true))
+                .toList();
+
+        return productJpaRepository
+                .saveAll(productEntities)
+                .stream()
                 .map(ProductEntityMapper::toDomain)
                 .toList();
     }
+
+    @Override
+    public boolean existsAnySkuBySkuCode(String value) {
+        return productJpaRepository.existsAnySkuBySkuCode(value);
+    }
+
 
 }

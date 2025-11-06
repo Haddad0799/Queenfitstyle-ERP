@@ -1,6 +1,6 @@
 package br.com.erp.queenfitstyle.catalog.application.event;
 
-import br.com.erp.queenfitstyle.catalog.api.dto.error.ProductImportError;
+import br.com.erp.queenfitstyle.catalog.web.dto.error.ProductImportError;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 

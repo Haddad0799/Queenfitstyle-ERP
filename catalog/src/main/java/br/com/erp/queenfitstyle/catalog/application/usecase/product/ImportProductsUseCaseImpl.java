@@ -1,6 +1,6 @@
 package br.com.erp.queenfitstyle.catalog.application.usecase.product;
 
-import br.com.erp.queenfitstyle.catalog.api.dto.error.ProductImportError;
+import br.com.erp.queenfitstyle.catalog.web.dto.error.ProductImportError;
 import br.com.erp.queenfitstyle.catalog.application.command.ImportProductCommand;
 import br.com.erp.queenfitstyle.catalog.application.command.ImportSkuCommand;
 import br.com.erp.queenfitstyle.catalog.application.event.ImportErrorEventPublisher;
@@ -50,7 +50,7 @@ public class ImportProductsUseCaseImpl implements ImportProductsUseCase {
     @Transactional
     public List<Product> execute(List<ImportProductCommand> commands) {
 
-        List<Product> savedProducts = new ArrayList<>();
+        List<Product> productsFitToSave = new ArrayList<>();
         List<ProductImportError> errors = new ArrayList<>();
 
         Map<String, Category> categories = extractExistingCategories(commands);
@@ -103,7 +103,7 @@ public class ImportProductsUseCaseImpl implements ImportProductsUseCase {
                 }
 
                 product.addSkus(skus);
-                savedProducts.add(productRepository.save(product));
+                productsFitToSave.add(product);
 
             } catch (Exception e) {
                 errors.add(new ProductImportError(
@@ -115,7 +115,7 @@ public class ImportProductsUseCaseImpl implements ImportProductsUseCase {
         }
 
         errorEventPublisher.publish(errors);
-        return savedProducts;
+        return productRepository.saveAll(productsFitToSave);
     }
 
 
@@ -144,7 +144,7 @@ public class ImportProductsUseCaseImpl implements ImportProductsUseCase {
 
     private Map<String, Product> extractExistingProducts(List<ImportProductCommand> commands) {
         Set<String> newSlugs = commands.stream()
-                .map(cmd -> Slug.from(cmd.name()).value()) // 👈 converte para String
+                .map(cmd -> Slug.from(cmd.name()).value())
                 .collect(Collectors.toSet());
 
         return productRepository.findBySlugInAndActiveTrue(newSlugs).stream()

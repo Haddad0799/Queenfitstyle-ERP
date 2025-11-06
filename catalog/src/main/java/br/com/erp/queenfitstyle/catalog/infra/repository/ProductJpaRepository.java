@@ -37,4 +37,13 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, Long>
 
 
     List<ProductEntity> findBySlugInAndActiveTrue(Set<String> slugs);
+
+    @Query("""
+    SELECT CASE WHEN COUNT(s) > 0 THEN true ELSE false END
+    FROM ProductEntity p
+    JOIN p.skus s
+    WHERE s.skuCode = :skuCode
+""")
+    boolean existsAnySkuBySkuCode(@Param("skuCode") String skuCode);
+
 }
