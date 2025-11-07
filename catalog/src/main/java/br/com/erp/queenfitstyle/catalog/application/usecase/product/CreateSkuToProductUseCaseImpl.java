@@ -1,7 +1,7 @@
 package br.com.erp.queenfitstyle.catalog.application.usecase.product;
 
 import br.com.erp.queenfitstyle.catalog.application.command.CreateSkuToProductCommand;
-import br.com.erp.queenfitstyle.catalog.application.exception.ColorNotFoundException;
+import br.com.erp.queenfitstyle.catalog.application.exception.color.ColorNotFoundException;
 import br.com.erp.queenfitstyle.catalog.application.exception.product.ProductNotFoundException;
 import br.com.erp.queenfitstyle.catalog.application.exception.product.SkuDuplicateException;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Color;

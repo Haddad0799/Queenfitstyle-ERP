@@ -4,7 +4,7 @@ import br.com.erp.queenfitstyle.catalog.web.dto.error.ProductImportError;
 import br.com.erp.queenfitstyle.catalog.application.command.ImportProductCommand;
 import br.com.erp.queenfitstyle.catalog.application.command.ImportSkuCommand;
 import br.com.erp.queenfitstyle.catalog.application.event.ImportErrorEventPublisher;
-import br.com.erp.queenfitstyle.catalog.application.exception.ColorNotFoundException;
+import br.com.erp.queenfitstyle.catalog.application.exception.color.ColorNotFoundException;
 import br.com.erp.queenfitstyle.catalog.application.exception.category.CategoryNotFoundException;
 import br.com.erp.queenfitstyle.catalog.application.exception.product.ProductDuplicateException;
 import br.com.erp.queenfitstyle.catalog.application.service.ProductCodeGenerator;

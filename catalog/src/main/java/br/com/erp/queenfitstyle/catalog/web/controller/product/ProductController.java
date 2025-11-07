@@ -1,7 +1,15 @@
 package br.com.erp.queenfitstyle.catalog.web.controller.product;
 
 import br.com.erp.queenfitstyle.catalog.application.command.*;
+import br.com.erp.queenfitstyle.catalog.domain.entity.Product;
+import br.com.erp.queenfitstyle.catalog.domain.entity.Sku;
+import br.com.erp.queenfitstyle.catalog.domain.port.in.*;
+import br.com.erp.queenfitstyle.catalog.domain.valueobject.SkuCode;
 import br.com.erp.queenfitstyle.catalog.web.dto.error.ProductImportError;
+import br.com.erp.queenfitstyle.catalog.web.dto.presign.request.GeneratePresignedUrlsRequest;
+import br.com.erp.queenfitstyle.catalog.web.dto.presign.request.ImageUploadRequest;
+import br.com.erp.queenfitstyle.catalog.web.dto.presign.response.PresignedUrl;
+import br.com.erp.queenfitstyle.catalog.web.dto.presign.response.PresignedUrlsResponse;
 import br.com.erp.queenfitstyle.catalog.web.dto.product.request.CreateProductDTO;
 import br.com.erp.queenfitstyle.catalog.web.dto.product.request.ImportProductsDTO;
 import br.com.erp.queenfitstyle.catalog.web.dto.product.request.UpdateProductDTO;
@@ -10,7 +18,6 @@ import br.com.erp.queenfitstyle.catalog.web.dto.product.response.ImportResumeDTO
 import br.com.erp.queenfitstyle.catalog.web.dto.product.response.ProductDetailsDTO;
 import br.com.erp.queenfitstyle.catalog.web.dto.product.response.ProductSkusDTO;
 import br.com.erp.queenfitstyle.catalog.web.dto.sku.request.CreateProductSkuDTO;
-import br.com.erp.queenfitstyle.catalog.web.dto.sku.request.CreateProductSkusDTO;
 import br.com.erp.queenfitstyle.catalog.web.dto.sku.request.UpdateSkuDto;
 import br.com.erp.queenfitstyle.catalog.web.dto.sku.response.SkuDetailsDTO;
 import br.com.erp.queenfitstyle.catalog.web.exception.SkuNotFoundException;
@@ -18,10 +25,6 @@ import br.com.erp.queenfitstyle.catalog.web.factory.ProductCommandFactory;
 import br.com.erp.queenfitstyle.catalog.web.listener.ImportErrorListener;
 import br.com.erp.queenfitstyle.catalog.web.listener.SkuErrorListener;
 import br.com.erp.queenfitstyle.catalog.web.mapper.ProductMapper;
-import br.com.erp.queenfitstyle.catalog.domain.entity.Product;
-import br.com.erp.queenfitstyle.catalog.domain.entity.Sku;
-import br.com.erp.queenfitstyle.catalog.domain.port.in.*;
-import br.com.erp.queenfitstyle.catalog.domain.valueobject.SkuCode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -49,7 +53,8 @@ public class ProductController {
     private final UpdateProductSkuUseCase updateProductSkuUseCase;
     private final CreateSkuToProductUseCase createSkuToProductUseCase;
 
-
+    //Upload sku image useCase
+    private final UploadImageSkuUseCase uploadImageSkuUseCase;
 
     //EventListenners
     private final ImportErrorListener importErrorListener;
@@ -57,12 +62,13 @@ public class ProductController {
 
 
 
-    public ProductController(CreateProductUseCase createProductUseCase, GetProductByIdUseCase getProductByIdUseCase, FindAllProductsFilteredUseCase findAllProductsFilteredUseCase, UpdateProductUseCase updateProductUseCase, CreateSkuToProductUseCase createSkuToProductUseCase, SkuErrorListener errorListener, FindAllSkusByProductUseCase findAllSkusByProductUseCase, UpdateProductSkuUseCase updateProductSkuUseCase, ImportProductsUseCase importProductsUseCase, ImportErrorListener importErrorListener) {
+    public ProductController(CreateProductUseCase createProductUseCase, GetProductByIdUseCase getProductByIdUseCase, FindAllProductsFilteredUseCase findAllProductsFilteredUseCase, UpdateProductUseCase updateProductUseCase, CreateSkuToProductUseCase createSkuToProductUseCase, UploadImageSkuUseCase uploadImageSkuUseCase, SkuErrorListener errorListener, FindAllSkusByProductUseCase findAllSkusByProductUseCase, UpdateProductSkuUseCase updateProductSkuUseCase, ImportProductsUseCase importProductsUseCase, ImportErrorListener importErrorListener) {
         this.createProductUseCase = createProductUseCase;
         this.getProductByIdUseCase = getProductByIdUseCase;
         this.findAllProductsFilteredUseCase = findAllProductsFilteredUseCase;
         this.updateProductUseCase = updateProductUseCase;
         this.createSkuToProductUseCase = createSkuToProductUseCase;
+        this.uploadImageSkuUseCase = uploadImageSkuUseCase;
         this.errorListener = errorListener;
         this.findAllSkusByProductUseCase = findAllSkusByProductUseCase;
         this.updateProductSkuUseCase = updateProductSkuUseCase;
@@ -202,6 +208,27 @@ public class ProductController {
 
         return ResponseEntity.created(location).body(response);
     }
+
+    @PostMapping("/{id}/skus/{skuCode}/images/presigned-urls")
+    public PresignedUrlsResponse generatePresignedUrls(
+            @PathVariable Long id,
+            @PathVariable String skuCode,
+            @RequestBody GeneratePresignedUrlsRequest request
+    ) {
+        List<String> urls = uploadImageSkuUseCase.execute(
+                id,
+                skuCode,
+                request.images().stream().map(ImageUploadRequest::filename).toList()
+        );
+
+        List<PresignedUrl> presignedList = new ArrayList<>();
+        for (int i = 0; i < request.images().size(); i++) {
+            presignedList.add(new PresignedUrl(request.images().get(i).filename(), urls.get(i)));
+        }
+
+        return new PresignedUrlsResponse(presignedList);
+    }
+
 
 
 }

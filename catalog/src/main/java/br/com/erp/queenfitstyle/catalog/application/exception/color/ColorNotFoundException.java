@@ -1,4 +1,4 @@
-package br.com.erp.queenfitstyle.catalog.application.exception;
+package br.com.erp.queenfitstyle.catalog.application.exception.color;
 
 public class ColorNotFoundException extends RuntimeException {
     public ColorNotFoundException(String message) {

@@ -3,7 +3,7 @@ package br.com.erp.queenfitstyle.catalog.application.usecase.product;
 import br.com.erp.queenfitstyle.catalog.application.command.CreateProductCommand;
 import br.com.erp.queenfitstyle.catalog.application.command.CreateSkuCommand;
 import br.com.erp.queenfitstyle.catalog.application.event.SkuErrorEventPublisher;
-import br.com.erp.queenfitstyle.catalog.application.exception.ColorNotFoundException;
+import br.com.erp.queenfitstyle.catalog.application.exception.color.ColorNotFoundException;
 import br.com.erp.queenfitstyle.catalog.application.exception.category.CategoryNotFoundException;
 import br.com.erp.queenfitstyle.catalog.application.exception.product.ProductDuplicateException;
 import br.com.erp.queenfitstyle.catalog.application.service.ProductCodeGenerator;
