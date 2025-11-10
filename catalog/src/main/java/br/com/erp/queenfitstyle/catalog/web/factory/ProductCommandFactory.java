@@ -4,12 +4,11 @@ import br.com.erp.queenfitstyle.catalog.web.dto.product.request.CreateProductDTO
 import br.com.erp.queenfitstyle.catalog.web.dto.product.request.ImportProductDTO;
 import br.com.erp.queenfitstyle.catalog.web.dto.product.request.ImportProductsDTO;
 import br.com.erp.queenfitstyle.catalog.web.dto.product.request.UpdateProductDTO;
-import br.com.erp.queenfitstyle.catalog.web.dto.sku.request.CreateProductSkuDTO;
-import br.com.erp.queenfitstyle.catalog.web.dto.sku.request.ImportProductSkuDTO;
-import br.com.erp.queenfitstyle.catalog.web.dto.sku.request.UpdateSkuDto;
+import br.com.erp.queenfitstyle.catalog.web.dto.sku.request.*;
 import br.com.erp.queenfitstyle.catalog.application.command.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProductCommandFactory {
 
@@ -101,4 +100,24 @@ public class ProductCommandFactory {
         );
     }
 
+    public static SaveProductSkuImagesCommand from(Long productId, String skuCode, SaveSkuImagesDTO dto) {
+        List<CreateImageCommand> imagesCommand = dto.images()
+                .stream()
+                .map(ProductCommandFactory::toCommand)
+                .collect(Collectors.toList());
+
+        return new SaveProductSkuImagesCommand(
+                productId,
+                skuCode,
+                imagesCommand
+        );
+    }
+
+    private static CreateImageCommand toCommand(SkuImagesRequestDto dto) {
+        return new CreateImageCommand(
+                dto.filename(),
+                dto.publicUrl(),
+                dto.displayOrder()
+        );
+    }
 }

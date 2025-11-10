@@ -18,6 +18,7 @@ import br.com.erp.queenfitstyle.catalog.web.dto.product.response.ImportResumeDTO
 import br.com.erp.queenfitstyle.catalog.web.dto.product.response.ProductDetailsDTO;
 import br.com.erp.queenfitstyle.catalog.web.dto.product.response.ProductSkusDTO;
 import br.com.erp.queenfitstyle.catalog.web.dto.sku.request.CreateProductSkuDTO;
+import br.com.erp.queenfitstyle.catalog.web.dto.sku.request.SaveSkuImagesDTO;
 import br.com.erp.queenfitstyle.catalog.web.dto.sku.request.UpdateSkuDto;
 import br.com.erp.queenfitstyle.catalog.web.dto.sku.response.SkuDetailsDTO;
 import br.com.erp.queenfitstyle.catalog.web.exception.SkuNotFoundException;
@@ -52,6 +53,7 @@ public class ProductController {
     private final FindAllSkusByProductUseCase findAllSkusByProductUseCase;
     private final UpdateProductSkuUseCase updateProductSkuUseCase;
     private final CreateSkuToProductUseCase createSkuToProductUseCase;
+    private final SaveProductSkuImagesUseCase saveProductSkuImagesUseCase;
 
     //Upload sku image useCase
     private final UploadImageSkuUseCase uploadImageSkuUseCase;
@@ -62,12 +64,13 @@ public class ProductController {
 
 
 
-    public ProductController(CreateProductUseCase createProductUseCase, GetProductByIdUseCase getProductByIdUseCase, FindAllProductsFilteredUseCase findAllProductsFilteredUseCase, UpdateProductUseCase updateProductUseCase, CreateSkuToProductUseCase createSkuToProductUseCase, UploadImageSkuUseCase uploadImageSkuUseCase, SkuErrorListener errorListener, FindAllSkusByProductUseCase findAllSkusByProductUseCase, UpdateProductSkuUseCase updateProductSkuUseCase, ImportProductsUseCase importProductsUseCase, ImportErrorListener importErrorListener) {
+    public ProductController(CreateProductUseCase createProductUseCase, GetProductByIdUseCase getProductByIdUseCase, FindAllProductsFilteredUseCase findAllProductsFilteredUseCase, UpdateProductUseCase updateProductUseCase, CreateSkuToProductUseCase createSkuToProductUseCase, SaveProductSkuImagesUseCase saveProductSkuImagesUseCase, UploadImageSkuUseCase uploadImageSkuUseCase, SkuErrorListener errorListener, FindAllSkusByProductUseCase findAllSkusByProductUseCase, UpdateProductSkuUseCase updateProductSkuUseCase, ImportProductsUseCase importProductsUseCase, ImportErrorListener importErrorListener) {
         this.createProductUseCase = createProductUseCase;
         this.getProductByIdUseCase = getProductByIdUseCase;
         this.findAllProductsFilteredUseCase = findAllProductsFilteredUseCase;
         this.updateProductUseCase = updateProductUseCase;
         this.createSkuToProductUseCase = createSkuToProductUseCase;
+        this.saveProductSkuImagesUseCase = saveProductSkuImagesUseCase;
         this.uploadImageSkuUseCase = uploadImageSkuUseCase;
         this.errorListener = errorListener;
         this.findAllSkusByProductUseCase = findAllSkusByProductUseCase;
@@ -229,6 +232,17 @@ public class ProductController {
         return new PresignedUrlsResponse(presignedList);
     }
 
+    @PostMapping("/{id}/skus/{skuCode}/images")
+    public ResponseEntity<Void> saveSkuImages (@PathVariable Long id,
+                                               @PathVariable String skuCode,
+                                               @RequestBody SaveSkuImagesDTO dto) {
+
+        SaveProductSkuImagesCommand command = ProductCommandFactory.from(id, skuCode, dto);
+        saveProductSkuImagesUseCase.execute(command);
+        return ResponseEntity.noContent().build();
+
+
+    }
 
 
 }
