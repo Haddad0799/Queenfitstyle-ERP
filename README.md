@@ -100,7 +100,7 @@ Incluído dentro do **Catalog Module**, este componente gerencia a **importaçã
 - Separação dos registros válidos e inválidos, permitindo importação parcial sem bloqueios.
 
 **Tecnologias utilizadas:**
-- **Apache POI** para leitura e geração de planilhas.  
+
 - **Spring Batch** e **JPA batch inserts** para processamento otimizado.  
 
 ---
@@ -124,16 +124,15 @@ Gerencia o **upload e armazenamento de imagens** de produtos e SKUs.
 
 | Categoria | Ferramentas |
 |------------|-------------|
-| **Linguagem** | Java 17+ |
+| **Linguagem** | Java 21 |
 | **Framework Principal** | Spring Boot 3+ |
 | **Arquitetura** | Clean + Hexagonal (Ports & Adapters) |
-| **Banco de Dados** | PostgreSQL |
+| **Banco de Dados** | MySQL |
 | **ORM** | Spring Data JPA (com batch inserts e fetch otimizado) |
-| **Importação de Planilhas** | Apache POI |
-| **Storage** | Amazon S3 (ou MinIO local) |
+| **Storage** | ou MinIO local(pronto para migrar para gcp,aws ou azure) |
 | **Build Tool** | Maven |
-| **Testes** | JUnit 5 / Mockito |
-| **Documentação** | SpringDoc / OpenAPI |
+
+
 
 ---
 
