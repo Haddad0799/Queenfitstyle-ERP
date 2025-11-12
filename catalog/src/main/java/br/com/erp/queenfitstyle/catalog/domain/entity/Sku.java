@@ -6,6 +6,8 @@ import br.com.erp.queenfitstyle.catalog.domain.valueobject.Size;
 import br.com.erp.queenfitstyle.catalog.domain.valueobject.SkuCode;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Sku {
 
@@ -16,6 +18,7 @@ public class Sku {
     private Price price;
     private boolean active;
     private Inventory inventory;
+    private final List<Image> images = new ArrayList<>();
 
 
     public Sku(SkuCode code, Color color, Size size, Price price, Inventory inventory) {
@@ -23,11 +26,11 @@ public class Sku {
         this.color = color;
         this.size = size;
         this.price = price;
-        this.active = true;
+        this.active = false;
         this.inventory = inventory;
     }
 
-    public Sku(Long id, SkuCode code, Color color, Size size, Price price, boolean active, Inventory inventory) {
+    public Sku(Long id, SkuCode code, Color color, Size size, Price price, boolean active, Inventory inventory, List<Image> images) {
         this.id = id;
         this.code = code;
         this.color = color;
@@ -82,6 +85,22 @@ public class Sku {
         this.active = false;
     }
 
+    public void addImage(Image image) {
+        if (images.size() >= 3)
+            throw new IllegalStateException("Um SKU pode ter no máximo 3 imagens.");
+
+        boolean orderExists = images.stream()
+                .anyMatch(img -> img.getDisplayOrder() == image.getDisplayOrder());
+        if (orderExists)
+            throw new IllegalStateException("Já existe uma imagem com essa ordem de exibição.");
+
+        images.add(image);
+    }
+
+    public List<Image> getImages() {
+        return List.copyOf(images);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -92,10 +111,7 @@ public class Sku {
 
     @Override
     public int hashCode() {
-        // Usa o valor do code
         return this.getCode().hashCode();
     }
-
-
 
 }

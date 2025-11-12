@@ -3,6 +3,9 @@ package br.com.erp.queenfitstyle.catalog.infra.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "skus")
@@ -34,6 +37,10 @@ public class SkuEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity product;
+
+    @OneToMany(mappedBy = "sku", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("displayOrder ASC")
+    private List<ImageEntity> images = new ArrayList<>();
 
     public SkuEntity() {}
 
@@ -87,5 +94,14 @@ public class SkuEntity {
 
     public Boolean isActive() {
         return active;
+    }
+
+    public void addImage(ImageEntity image) {
+        image.setSku(this);
+        images.add(image);
+    }
+
+    public List<ImageEntity> getImages() {
+        return images;
     }
 }

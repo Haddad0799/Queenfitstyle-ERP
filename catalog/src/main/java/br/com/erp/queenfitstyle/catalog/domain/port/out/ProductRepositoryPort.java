@@ -24,4 +24,8 @@ public interface ProductRepositoryPort {
 
 
     List<Product> findBySlugInAndActiveTrue(Set<String> slugs);
+
+    List<Product> saveAll(List<Product> productsfitToSave);
+
+    boolean existsAnySkuBySkuCode(String value);
 }
