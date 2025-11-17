@@ -1,7 +1,7 @@
 package br.com.erp.queenfitstyle.catalog.infra.adapter.repository;
 
+import br.com.erp.queenfitstyle.catalog.application.port.out.ProductRepositoryPort;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Product;
-import br.com.erp.queenfitstyle.catalog.domain.port.out.ProductRepositoryPort;
 import br.com.erp.queenfitstyle.catalog.infra.entity.ProductEntity;
 import br.com.erp.queenfitstyle.catalog.infra.mapper.ProductEntityMapper;
 import br.com.erp.queenfitstyle.catalog.infra.repository.ProductJpaRepository;
@@ -107,6 +107,5 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
     public boolean existsAnySkuBySkuCode(String value) {
         return productJpaRepository.existsAnySkuBySkuCode(value);
     }
-
 
 }

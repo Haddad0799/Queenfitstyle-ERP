@@ -1,7 +1,7 @@
 package br.com.erp.queenfitstyle.catalog.infra.adapter.repository;
 
 import br.com.erp.queenfitstyle.catalog.domain.entity.Color;
-import br.com.erp.queenfitstyle.catalog.domain.port.out.ColorRepositoryPort;
+import br.com.erp.queenfitstyle.catalog.application.port.out.ColorRepositoryPort;
 import br.com.erp.queenfitstyle.catalog.infra.mapper.ColorEntityMapper;
 import br.com.erp.queenfitstyle.catalog.infra.repository.ColorJpaRepository;
 import org.springframework.stereotype.Repository;
@@ -37,6 +37,15 @@ public class ColorRepositoryAdapter implements ColorRepositoryPort {
     public List<Color> findByNormalizedNameInAndActiveTrue(Set<String> colorNames) {
         return colorJpaRepository
                 .findByNormalizedNameInAndActiveTrue(colorNames)
+                .stream()
+                .map(ColorEntityMapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Color> findAll() {
+
+        return colorJpaRepository.findAll()
                 .stream()
                 .map(ColorEntityMapper::toDomain)
                 .toList();

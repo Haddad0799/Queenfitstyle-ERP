@@ -3,8 +3,8 @@ package br.com.erp.queenfitstyle.catalog.application.usecase.product;
 import br.com.erp.queenfitstyle.catalog.application.exception.product.ProductNotFoundException;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Product;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Sku;
-import br.com.erp.queenfitstyle.catalog.domain.port.in.FindAllSkusByProductUseCase;
-import br.com.erp.queenfitstyle.catalog.domain.port.out.ProductRepositoryPort;
+import br.com.erp.queenfitstyle.catalog.application.port.in.FindAllSkusByProductUseCase;
+import br.com.erp.queenfitstyle.catalog.application.port.out.ProductRepositoryPort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

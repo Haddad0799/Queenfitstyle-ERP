@@ -3,7 +3,6 @@ package br.com.erp.queenfitstyle.catalog.application.event;
 import br.com.erp.queenfitstyle.catalog.web.dto.error.ProductImportError;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 
 @Component

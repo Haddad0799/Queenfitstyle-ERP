@@ -1,30 +1,23 @@
 package br.com.erp.queenfitstyle.catalog.web.listener;
 
-import br.com.erp.queenfitstyle.catalog.web.dto.error.ProductImportError;
 import br.com.erp.queenfitstyle.catalog.application.event.ImportErrorEvent;
+import br.com.erp.queenfitstyle.catalog.web.collector.ImportErrorCollector;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class ImportErrorListener {
 
-    private final List<ProductImportError> errors = new ArrayList<>();
+    private final ImportErrorCollector collector;
+
+    public ImportErrorListener(ImportErrorCollector collector) {
+        this.collector = collector;
+    }
 
     @EventListener
     public void handleImportErrorEvent(ImportErrorEvent event) {
         if (event.errors() != null && !event.errors().isEmpty()) {
-            errors.addAll(event.errors());
+            collector.addAll(event.errors());
         }
-    }
-
-    public List<ProductImportError> getErrors() {
-        return List.copyOf(errors);
-    }
-
-    public void clear() {
-        errors.clear();
     }
 }

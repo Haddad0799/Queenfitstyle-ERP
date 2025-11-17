@@ -2,7 +2,6 @@ package br.com.erp.queenfitstyle.catalog.application.event;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 
 @Component

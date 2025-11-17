@@ -4,9 +4,9 @@ import br.com.erp.queenfitstyle.catalog.application.exception.category.CategoryN
 import br.com.erp.queenfitstyle.catalog.application.command.UpdateProductCommand;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Category;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Product;
-import br.com.erp.queenfitstyle.catalog.domain.port.in.UpdateProductUseCase;
-import br.com.erp.queenfitstyle.catalog.domain.port.out.CategoryRepositoryPort;
-import br.com.erp.queenfitstyle.catalog.domain.port.out.ProductRepositoryPort;
+import br.com.erp.queenfitstyle.catalog.application.port.in.UpdateProductUseCase;
+import br.com.erp.queenfitstyle.catalog.application.port.out.CategoryRepositoryPort;
+import br.com.erp.queenfitstyle.catalog.application.port.out.ProductRepositoryPort;
 import br.com.erp.queenfitstyle.catalog.domain.valueobject.Price;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

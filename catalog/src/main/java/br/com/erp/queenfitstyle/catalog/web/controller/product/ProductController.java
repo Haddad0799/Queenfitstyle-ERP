@@ -1,10 +1,12 @@
 package br.com.erp.queenfitstyle.catalog.web.controller.product;
 
 import br.com.erp.queenfitstyle.catalog.application.command.*;
+import br.com.erp.queenfitstyle.catalog.application.port.in.*;
+import br.com.erp.queenfitstyle.catalog.domain.entity.Image;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Product;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Sku;
-import br.com.erp.queenfitstyle.catalog.domain.port.in.*;
 import br.com.erp.queenfitstyle.catalog.domain.valueobject.SkuCode;
+import br.com.erp.queenfitstyle.catalog.web.collector.ImportErrorCollector;
 import br.com.erp.queenfitstyle.catalog.web.dto.error.ProductImportError;
 import br.com.erp.queenfitstyle.catalog.web.dto.presign.request.GeneratePresignedUrlsRequest;
 import br.com.erp.queenfitstyle.catalog.web.dto.presign.request.ImageUploadRequest;
@@ -21,6 +23,8 @@ import br.com.erp.queenfitstyle.catalog.web.dto.sku.request.CreateProductSkuDTO;
 import br.com.erp.queenfitstyle.catalog.web.dto.sku.request.SaveSkuImagesDTO;
 import br.com.erp.queenfitstyle.catalog.web.dto.sku.request.UpdateSkuDto;
 import br.com.erp.queenfitstyle.catalog.web.dto.sku.response.SkuDetailsDTO;
+import br.com.erp.queenfitstyle.catalog.web.dto.sku.response.SkuImageResponseDto;
+import br.com.erp.queenfitstyle.catalog.web.dto.sku.response.SkuImagesResponseDto;
 import br.com.erp.queenfitstyle.catalog.web.exception.SkuNotFoundException;
 import br.com.erp.queenfitstyle.catalog.web.factory.ProductCommandFactory;
 import br.com.erp.queenfitstyle.catalog.web.listener.ImportErrorListener;
@@ -54,29 +58,31 @@ public class ProductController {
     private final UpdateProductSkuUseCase updateProductSkuUseCase;
     private final CreateSkuToProductUseCase createSkuToProductUseCase;
     private final SaveProductSkuImagesUseCase saveProductSkuImagesUseCase;
+    private final GetSkuImagesUseCase getSkuImagesUseCase;
 
     //Upload sku image useCase
     private final UploadImageSkuUseCase uploadImageSkuUseCase;
 
     //EventListenners
-    private final ImportErrorListener importErrorListener;
+    private final ImportErrorCollector errorCollector;
     private final SkuErrorListener errorListener;
 
 
 
-    public ProductController(CreateProductUseCase createProductUseCase, GetProductByIdUseCase getProductByIdUseCase, FindAllProductsFilteredUseCase findAllProductsFilteredUseCase, UpdateProductUseCase updateProductUseCase, CreateSkuToProductUseCase createSkuToProductUseCase, SaveProductSkuImagesUseCase saveProductSkuImagesUseCase, UploadImageSkuUseCase uploadImageSkuUseCase, SkuErrorListener errorListener, FindAllSkusByProductUseCase findAllSkusByProductUseCase, UpdateProductSkuUseCase updateProductSkuUseCase, ImportProductsUseCase importProductsUseCase, ImportErrorListener importErrorListener) {
+    public ProductController(CreateProductUseCase createProductUseCase, GetProductByIdUseCase getProductByIdUseCase, FindAllProductsFilteredUseCase findAllProductsFilteredUseCase, UpdateProductUseCase updateProductUseCase, CreateSkuToProductUseCase createSkuToProductUseCase, SaveProductSkuImagesUseCase saveProductSkuImagesUseCase, GetSkuImagesUseCase getSkuImagesUseCase, UploadImageSkuUseCase uploadImageSkuUseCase, SkuErrorListener errorListener, FindAllSkusByProductUseCase findAllSkusByProductUseCase, UpdateProductSkuUseCase updateProductSkuUseCase, ImportProductsUseCase importProductsUseCase, ImportErrorCollector errorCollector) {
         this.createProductUseCase = createProductUseCase;
         this.getProductByIdUseCase = getProductByIdUseCase;
         this.findAllProductsFilteredUseCase = findAllProductsFilteredUseCase;
         this.updateProductUseCase = updateProductUseCase;
         this.createSkuToProductUseCase = createSkuToProductUseCase;
         this.saveProductSkuImagesUseCase = saveProductSkuImagesUseCase;
+        this.getSkuImagesUseCase = getSkuImagesUseCase;
         this.uploadImageSkuUseCase = uploadImageSkuUseCase;
         this.errorListener = errorListener;
         this.findAllSkusByProductUseCase = findAllSkusByProductUseCase;
         this.updateProductSkuUseCase = updateProductSkuUseCase;
         this.importProductsUseCase = importProductsUseCase;
-        this.importErrorListener = importErrorListener;
+        this.errorCollector = errorCollector;
     }
 
 
@@ -107,9 +113,9 @@ public class ProductController {
 
         List<Product> savedProducts = importProductsUseCase.execute(commands);
 
-        List<ProductImportError> errors = importErrorListener.getErrors();
+        List<ProductImportError> errors = errorCollector.getErrors();
 
-        importErrorListener.clear();
+        errorCollector.clear();
 
         ImportResumeDTO resume = ProductMapper.toImportResume(commands, savedProducts, errors);
 
@@ -241,6 +247,24 @@ public class ProductController {
         saveProductSkuImagesUseCase.execute(command);
         return ResponseEntity.noContent().build();
 
+
+    }
+
+    @GetMapping("/{id}/skus/{skuCode}/images")
+    public ResponseEntity<SkuImagesResponseDto> getSkuImages(@PathVariable Long id,
+                                                            @PathVariable String skuCode) {
+
+
+        List<Image> images = getSkuImagesUseCase.execute(id,skuCode);
+
+        List<SkuImageResponseDto> imageDtos = images.stream()
+                .map(i-> new SkuImageResponseDto(i.getId()
+                        .toString(),
+                        i.getPublicUrl(),
+                        i.getDisplayOrder()))
+                .toList();
+
+        return ResponseEntity.ok(new SkuImagesResponseDto(imageDtos));
 
     }
 

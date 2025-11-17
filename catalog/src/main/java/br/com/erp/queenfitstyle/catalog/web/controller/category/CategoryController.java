@@ -1,11 +1,11 @@
 package br.com.erp.queenfitstyle.catalog.web.controller.category;
 
+import br.com.erp.queenfitstyle.catalog.application.port.in.*;
 import br.com.erp.queenfitstyle.catalog.web.dto.category.request.CreateCategoryDTO;
 import br.com.erp.queenfitstyle.catalog.web.dto.category.request.UpdateCategoryNameRequest;
 import br.com.erp.queenfitstyle.catalog.web.dto.category.response.CategoryCreatedDTO;
 import br.com.erp.queenfitstyle.catalog.web.dto.category.response.CategoryUpdatedDTO;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Category;
-import br.com.erp.queenfitstyle.catalog.domain.port.in.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;

@@ -30,11 +30,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>br.com.erp</groupId>
-            <artifactId>upload</artifactId>
-            <version>${project.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>com.mysql</groupId>

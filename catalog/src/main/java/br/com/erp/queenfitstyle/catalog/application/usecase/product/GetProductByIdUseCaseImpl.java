@@ -2,8 +2,8 @@ package br.com.erp.queenfitstyle.catalog.application.usecase.product;
 
 import br.com.erp.queenfitstyle.catalog.application.exception.product.ProductNotFoundException;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Product;
-import br.com.erp.queenfitstyle.catalog.domain.port.in.GetProductByIdUseCase;
-import br.com.erp.queenfitstyle.catalog.domain.port.out.ProductRepositoryPort;
+import br.com.erp.queenfitstyle.catalog.application.port.in.GetProductByIdUseCase;
+import br.com.erp.queenfitstyle.catalog.application.port.out.ProductRepositoryPort;
 import org.springframework.stereotype.Service;
 
 @Service

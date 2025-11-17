@@ -4,9 +4,9 @@ import br.com.erp.queenfitstyle.catalog.application.exception.product.ProductNot
 import br.com.erp.queenfitstyle.catalog.application.exception.sku.SkuNotFoundException;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Product;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Sku;
-import br.com.erp.queenfitstyle.catalog.domain.port.in.UploadImageSkuUseCase;
-import br.com.erp.queenfitstyle.catalog.domain.port.out.ProductRepositoryPort;
-import br.com.erp.queenfitstyle.catalog.domain.port.out.UploadStoragePort;
+import br.com.erp.queenfitstyle.catalog.application.port.in.UploadImageSkuUseCase;
+import br.com.erp.queenfitstyle.catalog.application.port.out.ProductRepositoryPort;
+import br.com.erp.queenfitstyle.catalog.application.port.out.UploadStoragePort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 

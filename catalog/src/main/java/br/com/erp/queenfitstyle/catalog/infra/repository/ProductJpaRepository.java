@@ -1,6 +1,5 @@
 package br.com.erp.queenfitstyle.catalog.infra.repository;
 
-import br.com.erp.queenfitstyle.catalog.domain.entity.Product;
 import br.com.erp.queenfitstyle.catalog.infra.entity.ProductEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -32,8 +31,16 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, Long>
 """)
     Optional<ProductEntity> findBySkuCode(@Param("skuCode") String skuCode);
 
-    @Query("SELECT p FROM ProductEntity p JOIN FETCH p.skus s WHERE p.id = :productId AND s.skuCode = :skuCode")
-    Optional<ProductEntity> findProductWithSku(@Param("productId") Long productId, @Param("skuCode") String skuCode);
+    @Query("""
+    SELECT DISTINCT p
+    FROM ProductEntity p
+    JOIN FETCH p.skus s
+    LEFT JOIN FETCH s.images
+    WHERE p.id = :productId AND s.skuCode = :skuCode
+""")
+    Optional<ProductEntity> findProductWithSku(@Param("productId") Long productId,
+                                               @Param("skuCode") String skuCode);
+
 
 
     List<ProductEntity> findBySlugInAndActiveTrue(Set<String> slugs);

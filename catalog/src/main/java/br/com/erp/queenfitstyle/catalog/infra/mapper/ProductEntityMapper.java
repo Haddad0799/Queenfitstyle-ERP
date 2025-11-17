@@ -89,7 +89,7 @@ public class ProductEntityMapper {
         return entity;
     }
 
-    /** Versões sem SKUs para conveniência */
+
     public static Product toDomain(ProductEntity entity) {
         return toDomain(entity, true);
     }

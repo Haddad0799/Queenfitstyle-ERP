@@ -1,7 +1,7 @@
 package br.com.erp.queenfitstyle.catalog.infra.adapter.repository;
 
 import br.com.erp.queenfitstyle.catalog.domain.entity.Category;
-import br.com.erp.queenfitstyle.catalog.domain.port.out.CategoryRepositoryPort;
+import br.com.erp.queenfitstyle.catalog.application.port.out.CategoryRepositoryPort;
 import br.com.erp.queenfitstyle.catalog.infra.entity.CategoryEntity;
 import br.com.erp.queenfitstyle.catalog.infra.mapper.CategoryEntityMapper;
 import br.com.erp.queenfitstyle.catalog.infra.repository.CategoryJpaRepository;
