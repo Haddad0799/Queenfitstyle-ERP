@@ -2,8 +2,8 @@ package br.com.erp.queenfitstyle.catalog.application.usecase.category;
 
 import br.com.erp.queenfitstyle.catalog.application.exception.category.CategoryNotFoundException;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Category;
-import br.com.erp.queenfitstyle.catalog.domain.port.in.GetCategoryByidUseCase;
-import br.com.erp.queenfitstyle.catalog.domain.port.out.CategoryRepositoryPort;
+import br.com.erp.queenfitstyle.catalog.application.port.in.GetCategoryByidUseCase;
+import br.com.erp.queenfitstyle.catalog.application.port.out.CategoryRepositoryPort;
 import org.springframework.stereotype.Service;
 
 @Service

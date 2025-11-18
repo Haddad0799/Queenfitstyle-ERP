@@ -7,9 +7,9 @@ import br.com.erp.queenfitstyle.catalog.application.exception.product.SkuDuplica
 import br.com.erp.queenfitstyle.catalog.domain.entity.Color;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Product;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Sku;
-import br.com.erp.queenfitstyle.catalog.domain.port.in.CreateSkuToProductUseCase;
-import br.com.erp.queenfitstyle.catalog.domain.port.out.ColorRepositoryPort;
-import br.com.erp.queenfitstyle.catalog.domain.port.out.ProductRepositoryPort;
+import br.com.erp.queenfitstyle.catalog.application.port.in.CreateSkuToProductUseCase;
+import br.com.erp.queenfitstyle.catalog.application.port.out.ColorRepositoryPort;
+import br.com.erp.queenfitstyle.catalog.application.port.out.ProductRepositoryPort;
 import br.com.erp.queenfitstyle.catalog.domain.valueobject.Inventory;
 import br.com.erp.queenfitstyle.catalog.domain.valueobject.Price;
 import br.com.erp.queenfitstyle.catalog.domain.valueobject.Size;

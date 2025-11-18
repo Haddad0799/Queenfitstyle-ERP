@@ -4,8 +4,8 @@ import br.com.erp.queenfitstyle.catalog.application.exception.product.ProductNot
 import br.com.erp.queenfitstyle.catalog.application.command.UpdateSkuCommand;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Product;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Sku;
-import br.com.erp.queenfitstyle.catalog.domain.port.in.UpdateProductSkuUseCase;
-import br.com.erp.queenfitstyle.catalog.domain.port.out.ProductRepositoryPort;
+import br.com.erp.queenfitstyle.catalog.application.port.in.UpdateProductSkuUseCase;
+import br.com.erp.queenfitstyle.catalog.application.port.out.ProductRepositoryPort;
 import br.com.erp.queenfitstyle.catalog.domain.valueobject.Inventory;
 import br.com.erp.queenfitstyle.catalog.domain.valueobject.Price;
 import jakarta.transaction.Transactional;

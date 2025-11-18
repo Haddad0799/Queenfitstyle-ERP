@@ -18,7 +18,6 @@
 
     <modules>
         <module>catalog</module>
-        <module>upload</module>
         <module>app</module>
     </modules>
 

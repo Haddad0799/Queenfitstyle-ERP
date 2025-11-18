@@ -30,7 +30,8 @@ public class Sku {
         this.inventory = inventory;
     }
 
-    public Sku(Long id, SkuCode code, Color color, Size size, Price price, boolean active, Inventory inventory, List<Image> images) {
+    public Sku(Long id, SkuCode code, Color color, Size size, Price price,
+               boolean active, Inventory inventory, List<Image> images) {
         this.id = id;
         this.code = code;
         this.color = color;
@@ -38,7 +39,12 @@ public class Sku {
         this.price = price;
         this.active = active;
         this.inventory = inventory;
+
+        if (images != null) {
+            this.images.addAll(images);
+        }
     }
+
 
 
     public Long getId() {

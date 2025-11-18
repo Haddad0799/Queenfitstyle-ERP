@@ -5,8 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = {
         "br.com.erp.queenfitstyle.app",
-        "br.com.erp.queenfitstyle.catalog",
-        "br.com.erp.queenfitstyle.upload"
+        "br.com.erp.queenfitstyle.catalog"
+
 })
 public class Application {
     public static void main(String[] args) {

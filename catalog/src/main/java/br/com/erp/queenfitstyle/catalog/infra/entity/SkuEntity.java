@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -12,7 +11,8 @@ import java.util.List;
 public class SkuEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sku_seq")
+    @SequenceGenerator(name = "sku_seq", sequenceName = "sku_seq", allocationSize = 50)
     private Long id;
 
     @Column(name = "sku_code", nullable = false, unique = true, length = 50)
@@ -38,7 +38,7 @@ public class SkuEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity product;
 
-    @OneToMany(mappedBy = "sku", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "sku", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @OrderBy("displayOrder ASC")
     private List<ImageEntity> images = new ArrayList<>();
 
