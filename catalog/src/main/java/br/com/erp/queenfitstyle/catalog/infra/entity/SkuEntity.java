@@ -11,7 +11,8 @@ import java.util.List;
 public class SkuEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sku_seq")
+    @SequenceGenerator(name = "sku_seq", sequenceName = "sku_seq", allocationSize = 50)
     private Long id;
 
     @Column(name = "sku_code", nullable = false, unique = true, length = 50)

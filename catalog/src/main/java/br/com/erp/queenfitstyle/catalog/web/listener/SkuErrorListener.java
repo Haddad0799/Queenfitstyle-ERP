@@ -1,24 +1,23 @@
 package br.com.erp.queenfitstyle.catalog.web.listener;
 
 import br.com.erp.queenfitstyle.catalog.application.event.SkuValidationErrorsEvent;
+import br.com.erp.queenfitstyle.catalog.web.collector.SkuErrorCollector;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 @Component
 public class SkuErrorListener {
 
-    private final List<String> lastErrors = new CopyOnWriteArrayList<>();
+    private final SkuErrorCollector collector;
+
+    public SkuErrorListener(SkuErrorCollector collector) {
+        this.collector = collector;
+    }
 
     @EventListener
     public void onSkuErrors(SkuValidationErrorsEvent event) {
-        lastErrors.clear();
-        lastErrors.addAll(event.errors());
-    }
-
-    public List<String> getLastErrors() {
-        return List.copyOf(lastErrors);
+        if (event.errors() != null && !event.errors().isEmpty()) {
+            collector.addAll(event.errors());
+        }
     }
 }

@@ -2,7 +2,9 @@ package br.com.erp.queenfitstyle.catalog.infra.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -10,7 +12,8 @@ import java.util.Set;
 public class ProductEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq")
+    @SequenceGenerator(name = "product_seq", sequenceName = "product_seq", allocationSize = 50)
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -42,7 +45,7 @@ public class ProductEntity {
             orphanRemoval = true,
             fetch = FetchType.LAZY
     )
-    private Set<SkuEntity> skus = new HashSet<>();
+    private List<SkuEntity> skus = new ArrayList<>();
 
     public ProductEntity() {}
 
@@ -109,6 +112,6 @@ public class ProductEntity {
     public Boolean isActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }
 
-    public Set<SkuEntity> getSkus() { return skus; }
-    public void setSkus(Set<SkuEntity> skus) { this.skus = skus; }
+    public      List<SkuEntity> getSkus() { return skus; }
+    public void setSkus(Set<SkuEntity> skus) { this.skus = skus.stream().toList(); }
 }

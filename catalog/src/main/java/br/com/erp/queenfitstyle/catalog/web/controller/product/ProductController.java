@@ -7,6 +7,7 @@ import br.com.erp.queenfitstyle.catalog.domain.entity.Product;
 import br.com.erp.queenfitstyle.catalog.domain.entity.Sku;
 import br.com.erp.queenfitstyle.catalog.domain.valueobject.SkuCode;
 import br.com.erp.queenfitstyle.catalog.web.collector.ImportErrorCollector;
+import br.com.erp.queenfitstyle.catalog.web.collector.SkuErrorCollector;
 import br.com.erp.queenfitstyle.catalog.web.dto.error.ProductImportError;
 import br.com.erp.queenfitstyle.catalog.web.dto.presign.request.GeneratePresignedUrlsRequest;
 import br.com.erp.queenfitstyle.catalog.web.dto.presign.request.ImageUploadRequest;
@@ -27,8 +28,6 @@ import br.com.erp.queenfitstyle.catalog.web.dto.sku.response.SkuImageResponseDto
 import br.com.erp.queenfitstyle.catalog.web.dto.sku.response.SkuImagesResponseDto;
 import br.com.erp.queenfitstyle.catalog.web.exception.SkuNotFoundException;
 import br.com.erp.queenfitstyle.catalog.web.factory.ProductCommandFactory;
-import br.com.erp.queenfitstyle.catalog.web.listener.ImportErrorListener;
-import br.com.erp.queenfitstyle.catalog.web.listener.SkuErrorListener;
 import br.com.erp.queenfitstyle.catalog.web.mapper.ProductMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -65,11 +64,11 @@ public class ProductController {
 
     //EventListenners
     private final ImportErrorCollector errorCollector;
-    private final SkuErrorListener errorListener;
+    private final SkuErrorCollector skuErrorCollector;
 
 
 
-    public ProductController(CreateProductUseCase createProductUseCase, GetProductByIdUseCase getProductByIdUseCase, FindAllProductsFilteredUseCase findAllProductsFilteredUseCase, UpdateProductUseCase updateProductUseCase, CreateSkuToProductUseCase createSkuToProductUseCase, SaveProductSkuImagesUseCase saveProductSkuImagesUseCase, GetSkuImagesUseCase getSkuImagesUseCase, UploadImageSkuUseCase uploadImageSkuUseCase, SkuErrorListener errorListener, FindAllSkusByProductUseCase findAllSkusByProductUseCase, UpdateProductSkuUseCase updateProductSkuUseCase, ImportProductsUseCase importProductsUseCase, ImportErrorCollector errorCollector) {
+    public ProductController(CreateProductUseCase createProductUseCase, GetProductByIdUseCase getProductByIdUseCase, FindAllProductsFilteredUseCase findAllProductsFilteredUseCase, UpdateProductUseCase updateProductUseCase, CreateSkuToProductUseCase createSkuToProductUseCase, SaveProductSkuImagesUseCase saveProductSkuImagesUseCase, GetSkuImagesUseCase getSkuImagesUseCase, UploadImageSkuUseCase uploadImageSkuUseCase,FindAllSkusByProductUseCase findAllSkusByProductUseCase, UpdateProductSkuUseCase updateProductSkuUseCase, ImportProductsUseCase importProductsUseCase, ImportErrorCollector errorCollector, SkuErrorCollector skuErrorCollector) {
         this.createProductUseCase = createProductUseCase;
         this.getProductByIdUseCase = getProductByIdUseCase;
         this.findAllProductsFilteredUseCase = findAllProductsFilteredUseCase;
@@ -78,7 +77,7 @@ public class ProductController {
         this.saveProductSkuImagesUseCase = saveProductSkuImagesUseCase;
         this.getSkuImagesUseCase = getSkuImagesUseCase;
         this.uploadImageSkuUseCase = uploadImageSkuUseCase;
-        this.errorListener = errorListener;
+        this.skuErrorCollector = skuErrorCollector;
         this.findAllSkusByProductUseCase = findAllSkusByProductUseCase;
         this.updateProductSkuUseCase = updateProductSkuUseCase;
         this.importProductsUseCase = importProductsUseCase;
@@ -93,9 +92,11 @@ public class ProductController {
 
         Product product = createProductUseCase.execute(command);
 
-        List<String> errors = errorListener.getLastErrors();
+        List<String> errors = skuErrorCollector.getErrors();
 
         CreateProductResumeDTO response = ProductMapper.toResumeDTO(product, errors);
+
+        skuErrorCollector.clear();
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
